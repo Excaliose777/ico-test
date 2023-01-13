@@ -1,0 +1,47 @@
+.container{
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.swap{
+  border-radius: 1px solid black;
+  padding: 0.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.main{
+  margin: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.liquidity{
+    border-radius: 1px solid black;
+    padding: 0.5rem 1rem;
+    /* display: flex;
+    flex-direction: column;
+    align-items: center; */
+}
+
+.remove{
+  margin-top: 1rem;
+}
+
+.add{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.input{
+  padding:0.25rem 0.5rem;
+  border: 1px solid black;
+  border-radius: 5px;
+}
