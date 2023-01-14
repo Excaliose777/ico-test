@@ -22,6 +22,7 @@ export default function Home() {
   const [balanceOfStoneTokens, setBalanceOfStoneTokens] = useState(zero);
   // amount of the tokens that the user wants to mint
   const [tokenAmount, setTokenAmount] = useState(zero);
+  const [ETH, setETH] = useState(zero);
   // tokensMinted is the total number of tokens that have been minted till now out of 10000(max total supply)
   const [tokensMinted, setTokensMinted] = useState(zero);
   // isOwner gets the owner of the contract through the signed address
@@ -38,7 +39,7 @@ export default function Home() {
         provider
       );
       // Get the address associated to the signer which is connected to  MetaMask
-      const address = await signer.getAddress();
+      // const address = await signer.getAddress();
       // call the balanceOf from the token contract to get the number of tokens held by the user
       const balance = await tokenContract.balanceOf(address);
       // balance is already a big number, so we dont need to convert it before setting it
@@ -60,11 +61,11 @@ export default function Home() {
           TOKEN_ABI,
           signer
         );
-        // Each token is of `0.00009 ether`. The value we need to send is `0.00009 * amount`
-        const value = 0.00009 * amount;
+        // Each token is of `0.0001 ether`. The value we need to send is `0.0001 * amount`
+        const value = 0.0001 * amount;
         const tx = await tokenContract.mint(amount, {
-          // value signifies the cost of one stone token which is "0.00009" eth.
-          // We are parsing `0.00009` string to ether using the utils library from ethers.js
+          // value signifies the cost of one stone token which is "0.0001" eth.
+          // We are parsing `0.0001` string to ether using the utils library from ethers.js
           value: utils.parseEther(value.toString()),
         });
         setLoading(true);
@@ -75,7 +76,7 @@ export default function Home() {
         await getBalanceOfStoneTokens();
         await getTotalTokensMinted();
       } catch (err) {
-        console.error(err);
+        console.error(err)
       }
     };
 
@@ -99,6 +100,15 @@ export default function Home() {
     }
   };
 
+  const getTotalEth = async () => {
+    try {
+      const ethBalance = await provider.getBalance(address);
+      setETH(ethBalance);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
     /**
    * getOwner: gets the contract owner by connected address
    */
@@ -112,7 +122,7 @@ export default function Home() {
         // call the owner function from the contract
         const _owner = await tokenContract.owner();
         // Get the address associated to signer which is connected to Metamask
-        const address = await signer.getAddress();
+        // const address = await signer.getAddress();
         if (address.toLowerCase() === _owner.toLowerCase()) {
           setIsOwner(true);
         }
@@ -147,6 +157,7 @@ export default function Home() {
     useEffect(() => {
       getTotalTokensMinted();
       getBalanceOfStoneTokens();
+      getTotalEth();
       getOwner();
   }, [isConnected]);
 
@@ -160,7 +171,8 @@ export default function Home() {
           type="number"
           placeholder="Amount of Tokens"
           // BigNumber.from converts the `e.target.value` to a BigNumber
-          onChange={(e) => setTokenAmount(BigNumber.from(e.target.value))}
+          // onChange={(e) => setTokenAmount(BigNumber.from(e.target.value))}
+          onChange={(e) => setTokenAmount(e.target.value === "" ? 0 : BigNumber.from(e.target.value))}
           className={styles.input}
         />
       </div>
@@ -192,12 +204,15 @@ export default function Home() {
       <div className={styles.main}>
         <div>
           <div className={styles.description}>
+            You have {Number(utils.formatEther(ETH)).toFixed(2)} ETH
+          </div>
+          <div className={styles.description}>
             {/* Format Ether helps us in converting a BigNumber to string */}
             You have minted {utils.formatEther(balanceOfStoneTokens)} Stone Tokens
           </div>
           <div className={styles.description}>
             {/* Format Ether helps us in converting a BigNumber to string */}
-            Overall {utils.formatEther(tokensMinted)}/500,000 have been minted!!!
+            Overall {utils.formatEther(tokensMinted)}/500,000 have been minted
           </div>
           {render()}
 
