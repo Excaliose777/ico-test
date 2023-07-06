@@ -93,7 +93,7 @@ export default function Home() {
         provider
       );
       // Get all the tokens that have been minted
-      const _tokensMinted = await tokenContract.totalMinted();
+      const _tokensMinted = await tokenContract.totalSupply();
       setTokensMinted(_tokensMinted);
     } catch (err) {
       console.error(err);
@@ -155,6 +155,8 @@ export default function Home() {
     };
   
     useEffect(() => {
+
+      console.log("stuff")
       getTotalTokensMinted();
       getBalanceOfStoneTokens();
       getTotalEth();
